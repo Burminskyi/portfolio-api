@@ -1,0 +1,67 @@
+@host = http://localhost:5080
+@token = {{login.response.body.$.token}}
+
+### Health
+GET {{host}}/
+
+### About (public)
+GET {{host}}/api/about
+
+### Skills (public)
+GET {{host}}/api/skills
+
+### Projects (public)
+GET {{host}}/api/projects
+
+### Login
+# @name login
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@portfolio.local",
+  "password": "Admin123!"
+}
+
+### Update About (protected)
+PUT {{host}}/api/about
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "fullName": "Anton Developer",
+  "title": "Fullstack .NET / Angular Developer",
+  "bio": "Updated from HTTP file",
+  "avatarUrl": "/assets/avatar.png",
+  "location": "Ukraine",
+  "socialLinks": {
+    "telegramUrl": "https://t.me/username",
+    "githubUrl": "https://github.com/username",
+    "linkedinUrl": "https://linkedin.com/in/username"
+  }
+}
+
+### Create Skill (protected)
+POST {{host}}/api/skills
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "TypeScript",
+  "category": "Frontend",
+  "description": "Typed JavaScript for large apps",
+  "level": "intermediate",
+  "projectIds": []
+}
+
+### Create Project (protected)
+POST {{host}}/api/projects
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "New Project",
+  "description": "Demo project",
+  "link": "https://example.com",
+  "skillIds": []
+}
