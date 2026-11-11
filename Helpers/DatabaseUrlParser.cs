@@ -26,6 +26,9 @@ public static class DatabaseUrlParser
         var password = userInfo.Length > 1 ? Uri.UnescapeDataString(userInfo[1]) : string.Empty;
         var database = uri.AbsolutePath.TrimStart('/');
 
+        // Render DATABASE_URL often omits the port; Uri.Port is then -1.
+        var port = uri.IsDefaultPort || uri.Port <= 0 ? 5432 : uri.Port;
+
         var sslMode = "Require";
         if (!string.IsNullOrEmpty(uri.Query))
         {
@@ -41,6 +44,6 @@ public static class DatabaseUrlParser
             }
         }
 
-        return $"Host={uri.Host};Port={uri.Port};Database={database};Username={username};Password={password};SSL Mode={sslMode};Trust Server Certificate=true";
+        return $"Host={uri.Host};Port={port};Database={database};Username={username};Password={password};SSL Mode={sslMode};Trust Server Certificate=true";
     }
 }
